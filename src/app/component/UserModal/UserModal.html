@@ -1,0 +1,35 @@
+<div class="um-overlay">
+  <div class="um-dialog">
+    <header class="um-header">
+      <h3>{{ userCopy.userId ? 'Edit User' : 'Add User' }}</h3>
+      <button type="button" class="close-btn" (click)="onClose()">x</button>
+    </header>
+
+    <form #userForm="ngForm" (ngSubmit)="onSave()" class="um-body">
+      <label for="firstName">
+        First name
+        <input id="firstName" name="firstName" type="text" [(ngModel)]="userCopy.firstName" required />
+      </label>
+
+      <label for="lastName">
+        Last name
+        <input id="lastName" name="lastName" type="text" [(ngModel)]="userCopy.lastName" required />
+      </label>
+
+      <label for="email">
+        Email
+        <input id="email" name="email" type="email" [(ngModel)]="userCopy.email" required />
+      </label>
+
+      <label for="username">
+        Username
+        <input id="username" name="username" type="text" [(ngModel)]="userCopy.username" required />
+      </label>
+
+      <footer class="um-footer">
+        <button type="submit" class="btn" [disabled]="userForm.invalid">Save</button>
+        <button type="button" class="btn btn-muted" (click)="onClose()">Cancel</button>
+      </footer>
+    </form>
+  </div>
+</div>

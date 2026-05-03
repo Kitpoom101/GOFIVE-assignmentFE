@@ -1,0 +1,39 @@
+<app-dashboard-util
+  (addUser)="openEdit()"
+  [users]="allUsers"
+  (usersChange)="onUsersChange($event)"
+></app-dashboard-util>
+
+<div class="bg-white flex flex-col px-3 rounded-xl">
+  <div class="p-3">
+    <div class="flex items-center justify-between">
+      <div>List Users</div>
+    </div>
+  </div>
+  <div class="table-header flex px-3 py-2 border-t border-b">
+    @for (col of tableCols; track $index) {
+      <div [style.width]="col.width" class="font-semibold">{{ col.name }}</div>
+    }
+  </div>
+
+  @for (user of users; track $index) {
+    <div class="flex flex-row items-center px-3 py-2 w-full hover:bg-gray-50">
+      <div [style.width]="tableCols[0].width">
+        <div class="font-medium">{{ user.firstName }} {{ user.lastName }}</div>
+        <div class="text-sm text-gray-500">{{ user.email }}</div>
+      </div>
+      <div [style.width]="tableCols[1].width">{{ user.username }}</div>
+      <div [style.width]="tableCols[2].width">
+        <button class="icon-btn" title="Edit" (click)="openEdit(user)">Edit</button>
+        <button class="icon-btn delete" title="Delete" (click)="onDelete(user)">Delete</button>
+      </div>
+    </div>
+  }
+
+  <app-user-modal
+    [user]="selectedUser"
+    (save)="onSaveUser($event)"
+    (close)="onModalClose()"
+    *ngIf="selectedUser"
+  ></app-user-modal>
+</div>

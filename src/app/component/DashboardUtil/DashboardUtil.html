@@ -1,0 +1,17 @@
+<div class="flex w-full flex-col gap-5 my-4">
+  <p class="text-[#4A85F6] text-2xl font-bold">User Dashboard</p>
+  <div class="flex flex-row w-full justify-evenly gap-3">
+    <input
+      class="flex-1 bg-white rounded-xl px-4"
+      placeholder="Search by name or username"
+      [value]="searchTerm"
+      (input)="onSearch($event)"
+    />
+    <button class="bg-[#4A85F6] text-white px-5 py-2 rounded-lg" (click)="onAdd()">Add User</button>
+    <select name="sort" id="sort" [value]="sortBy" (change)="onSort($event)">
+      <option value="name">Name</option>
+      <option value="username">Username</option>
+      <option value="email">Email</option>
+    </select>
+  </div>
+</div>

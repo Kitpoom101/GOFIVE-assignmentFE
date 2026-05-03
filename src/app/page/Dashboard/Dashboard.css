@@ -1,0 +1,7 @@
+/* Dashboard table styles */
+.table-header { background: #f9fafb; }
+.icon-btn { background: transparent;border:0;padding:6px 8px;border-radius:6px;cursor:pointer }
+.icon-btn:hover{background:#eef2ff}
+.icon-btn.delete:hover{background:#fee2e2}
+.add-btn{background:#10b981;color:#fff;padding:6px 10px;border-radius:6px;border:0;cursor:pointer}
+.add-btn:hover{opacity:0.95}
