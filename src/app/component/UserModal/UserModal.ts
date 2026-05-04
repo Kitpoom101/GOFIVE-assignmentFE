@@ -85,9 +85,8 @@ export class UserModal implements OnChanges {
       return;
     }
 
-    // emit copy to parent (create or update)
-    this.save.emit(this.userCopy);  
-    this.close.emit();  
+    // Parent will close modal after a successful API response.
+    this.save.emit(this.userCopy);
   }
 
   onClose() {

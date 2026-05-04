@@ -12,6 +12,20 @@
       <option value="name">Name</option>
       <option value="username">Username</option>
       <option value="email">Email</option>
+      <option value="createdDate">Created Date</option>
     </select>
+    <select name="sortDir" id="sortDir" [value]="sortDir" (change)="onSortDir($event)">
+      <option value="asc">Ascending</option>
+      <option value="desc">Descending</option>
+    </select>
+  </div>
+  <div class="flex items-center justify-end gap-3">
+    <button class="bg-white border px-3 py-1 rounded disabled:opacity-50" (click)="onPrevPage()" [disabled]="page <= 1">
+      Prev
+    </button>
+    <span class="text-sm text-gray-600">Page {{ page }} / {{ totalPages || 1 }}</span>
+    <button class="bg-white border px-3 py-1 rounded disabled:opacity-50" (click)="onNextPage()" [disabled]="page >= totalPages">
+      Next
+    </button>
   </div>
 </div>

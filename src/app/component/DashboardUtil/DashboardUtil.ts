@@ -4,10 +4,7 @@ import {
   Output,
   EventEmitter,
   Input,
-  OnChanges,
-  SimpleChanges,
 } from '@angular/core';
-import { User } from '../../service/user';
 
 @Component({
   selector: 'app-dashboard-util',
@@ -17,20 +14,18 @@ import { User } from '../../service/user';
   styleUrl: './DashboardUtil.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardUtil implements OnChanges {
-  @Input() users: User[] = [];
-  searchTerm = '';
-  sortBy = 'name';
-  filteredUsers: User[] = [];
+export class DashboardUtil {
+  @Input() searchTerm = '';
+  @Input() sortBy: 'name' | 'username' | 'email' | 'createdDate' = 'name';
+  @Input() sortDir: 'asc' | 'desc' = 'asc';
+  @Input() page = 1;
+  @Input() totalPages = 1;
 
   @Output() addUser = new EventEmitter<void>();
-  @Output() usersChange = new EventEmitter<User[]>();
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['users']) {
-      this.applyFiltersAndSort();
-    }
-  }
+  @Output() searchChange = new EventEmitter<string>();
+  @Output() sortByChange = new EventEmitter<'name' | 'username' | 'email' | 'createdDate'>();
+  @Output() sortDirChange = new EventEmitter<'asc' | 'desc'>();
+  @Output() pageChange = new EventEmitter<number>();
 
   onAdd() {
     this.addUser.emit();
@@ -38,36 +33,28 @@ export class DashboardUtil implements OnChanges {
 
   onSearch(ev: Event) {
     this.searchTerm = (ev.target as HTMLInputElement).value || '';
-    this.applyFiltersAndSort();
+    this.searchChange.emit(this.searchTerm);
   }
 
   onSort(ev: Event) {
-    this.sortBy = (ev.target as HTMLSelectElement).value;
-    this.applyFiltersAndSort();
+    this.sortBy = (ev.target as HTMLSelectElement).value as 'name' | 'username' | 'email' | 'createdDate';
+    this.sortByChange.emit(this.sortBy);
   }
 
-  private applyFiltersAndSort() {
-    const term = this.searchTerm.trim().toLowerCase();
-    let list = this.users.slice();
+  onSortDir(ev: Event) {
+    this.sortDir = (ev.target as HTMLSelectElement).value as 'asc' | 'desc';
+    this.sortDirChange.emit(this.sortDir);
+  }
 
-    if (term) {
-      list = list.filter((u) => {
-        const full = `${u.firstName || ''} ${u.lastName || ''} ${u.username || ''} ${u.email || ''}`.toLowerCase();
-        return full.includes(term);
-      });
+  onPrevPage() {
+    if (this.page > 1) {
+      this.pageChange.emit(this.page - 1);
     }
+  }
 
-    if (this.sortBy === 'name') {
-      list.sort((a, b) =>
-        `${a.firstName || ''} ${a.lastName || ''}`.localeCompare(`${b.firstName || ''} ${b.lastName || ''}`),
-      );
-    } else if (this.sortBy === 'username') {
-      list.sort((a, b) => (a.username || '').localeCompare(b.username || ''));
-    } else if (this.sortBy === 'email') {
-      list.sort((a, b) => (a.email || '').localeCompare(b.email || ''));
+  onNextPage() {
+    if (this.page < this.totalPages) {
+      this.pageChange.emit(this.page + 1);
     }
-
-    this.filteredUsers = list;
-    this.usersChange.emit(this.filteredUsers);
   }
 }

@@ -6,11 +6,6 @@
     </header>
 
     <form #userForm="ngForm" (ngSubmit)="onSave()" class="um-body">
-      <label for="userId">
-        User ID
-        <input id="userId" name="userId" type="text" [(ngModel)]="userCopy.userId" required />
-      </label>
-
       <label for="firstName">
         First name
         <input id="firstName" name="firstName" type="text" [(ngModel)]="userCopy.firstName" required />

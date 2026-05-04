@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { User, UserService } from '../../service/user';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef  } from '@angular/core';
+import { User, UserService, UsersQueryParams } from '../../service/user';
 import { DashboardUtil } from '../../component/DashboardUtil/DashboardUtil';
 import { UserModal } from '../../component/UserModal/UserModal';
 import { CommonModule } from '@angular/common';
@@ -14,30 +14,62 @@ import { CommonModule } from '@angular/common';
 })
 export class Dashboard {
   users: User[] = [];
-  allUsers: User[] = [];
   selectedUser?: User;
   isCreateMode = false;
+  query: UsersQueryParams = {
+    page: 1,
+    pageSize: 6,
+    sortBy: 'name',
+    sortDir: 'asc',
+    search: '',
+  };
+  totalPages = 1;
   tableCols = [
-    { name: 'Name', width: '40%' },
-    { name: 'Username', width: '30%' },
-    { name: 'Action', width: '30%' },
+    { name: 'Name', width: '55%' },
+    { name: 'Created Date', width: '30%' },
+    { name: 'Action', width: '15%' },
   ];
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.loadUser();
+    this.loadUsers();
   }
 
-  loadUser() {
-    this.userService.getUsers().subscribe((data) => {
-      this.allUsers = data || [];
-      this.users = this.allUsers.slice();
+  loadUsers() {
+    this.userService.getUsers(this.query).subscribe((data) => {
+      this.users = data?.items ?? [];
+      this.totalPages = data?.totalPages || 1;
+      this.query.page = data?.page || 1;
+
+      this.cdr.markForCheck();
     });
   }
 
-  onUsersChange(filteredUsers: User[]) {
-    this.users = filteredUsers || [];
+  onSearchChange(searchTerm: string) {
+    this.query.search = searchTerm;
+    this.query.page = 1;
+    this.loadUsers();
+  }
+
+  onSortByChange(sortBy: 'name' | 'username' | 'email' | 'createdDate') {
+    this.query.sortBy = sortBy;
+    this.query.page = 1;
+    this.loadUsers();
+  }
+
+  onSortDirChange(sortDir: 'asc' | 'desc') {
+    this.query.sortDir = sortDir;
+    this.query.page = 1;
+    this.loadUsers();
+  }
+
+  onPageChange(page: number) {
+    this.query.page = page;
+    this.loadUsers();
   }
 
   openEdit(user?: User) {
@@ -86,8 +118,10 @@ export class Dashboard {
       };
       this.userService.createUser(createPayload).subscribe({
         next: () => {
-          this.loadUser();
+          this.query.page = 1;
+          this.loadUsers();
           this.onModalClose();
+          this.cdr.markForCheck();
         },
         error: (error) => {
           console.error('Create user failed', error);
@@ -102,7 +136,7 @@ export class Dashboard {
 
       this.userService.updateUser(user.userId, updatePayload).subscribe({
         next: () => {
-          this.loadUser();
+          this.loadUsers();
           this.onModalClose();
         },
         error: (error) => {
@@ -114,6 +148,6 @@ export class Dashboard {
 
   onDelete(user: User) {
     if (!confirm('Delete user ' + (user.firstName || '') + '?')) return;
-    this.userService.deleteUser(user.userId).subscribe(() => this.loadUser());
+    this.userService.deleteUser(user.userId).subscribe(() => this.loadUsers());
   }
 }
