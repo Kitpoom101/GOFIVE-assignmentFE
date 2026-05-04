@@ -105,7 +105,7 @@ app.UseCors("AllowFrontend");
 │   ├── pages/        
 │   ├── services/     
 ## 📁 Project Structure
-
+```
 src/
 ├── app/
 │   ├── components/     → UI elements (Header, Sidebar, Icons, Modals)   
@@ -136,6 +136,7 @@ src/
 ├── main.server.ts
 ├── server.ts
 └── styles.css
+```
 ---
 
 ## ⚠️ Common Issues
