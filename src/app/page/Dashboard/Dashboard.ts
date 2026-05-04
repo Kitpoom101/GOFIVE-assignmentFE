@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ChangeDetectorRef  } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ChangeDetectorRef } from '@angular/core';
 import { User, UserService, UsersQueryParams } from '../../service/user';
 import { DashboardUtil } from '../../component/DashboardUtil/DashboardUtil';
 import { UserModal } from '../../component/UserModal/UserModal';
@@ -25,10 +25,12 @@ export class Dashboard {
   };
   totalPages = 1;
   tableCols = [
-    { name: 'Name', width: '55%' },
+    { name: 'Name', width: '45%' },
     { name: 'Created Date', width: '30%' },
-    { name: 'Action', width: '15%' },
+    { name: 'Action', width: '25%' },
   ];
+
+  // current page is tracked on `query.page`
 
   constructor(
     private userService: UserService,
@@ -43,7 +45,7 @@ export class Dashboard {
     this.userService.getUsers(this.query).subscribe((data) => {
       this.users = data?.items ?? [];
       this.totalPages = data?.totalPages || 1;
-      this.query.page = data?.page || 1;
+      this.query.page = data?.page ?? this.query.page;
 
       this.cdr.markForCheck();
     });
@@ -69,6 +71,26 @@ export class Dashboard {
 
   onPageChange(page: number) {
     this.query.page = page;
+    this.loadUsers();
+  }
+
+  onPrevPage() {
+    if ((this.query.page ?? 1) > 1) {
+      this.onPageChange((this.query.page ?? 1) - 1);
+    }
+  }
+
+  onNextPage() {
+    if ((this.query.page ?? 1) < this.totalPages) {
+      this.onPageChange((this.query.page ?? 1) + 1);
+    }
+  }
+
+  onPageSizeChange(size: number | string) {
+    const pageSize = typeof size === 'string' ? parseInt(size, 10) : size;
+    if (!pageSize || pageSize <= 0) return;
+    this.query.pageSize = pageSize;
+    this.query.page = 1;
     this.loadUsers();
   }
 

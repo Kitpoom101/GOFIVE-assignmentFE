@@ -2,13 +2,23 @@
   <div class="text-2xl font-bold flex p-4">
     YOURLOGO
   </div>
-  <div class="gap-4 flex flex-col font-sans font-medium">
-    @for (data of FunctionData; track $index) {
-      <div class="hover:text-[#4A85F6] cursor-pointer flex items-center gap-2 px-3 py-2">
-        <ng-container *ngComponentOutlet="data.icon"></ng-container>
-        {{data.name}}
-      </div>
-    }
+  <div class="font-sans font-medium space-y-12">
+    <div class="gap-4 flex flex-col ">
+      @for (data of FunctionData; track $index) {
+        <div [routerLink]="data.routes" routerLinkActive="text-[#4A85F6] bg-blue-50" class="hover:text-[#4A85F6] cursor-pointer flex items-center gap-2 px-3 py-2">
+          <ng-container *ngComponentOutlet="data.icon"></ng-container>
+          {{data.name}}
+        </div>
+      }
+    </div>
+    <div class="flex flex-col gap-4">
+      @for (udata of UtilData; track $index) {
+        <div class="hover:text-[#4A85F6] cursor-pointer flex items-center gap-2 px-3 py-2">
+          <ng-container *ngComponentOutlet="udata.icon"></ng-container>
+          {{udata.name}}
+        </div>
+      }
+    </div>
   </div>
   
 </div>

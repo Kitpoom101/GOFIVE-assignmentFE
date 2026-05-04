@@ -3,12 +3,9 @@
   [searchTerm]="query.search || ''"
   [sortBy]="query.sortBy || 'name'"
   [sortDir]="query.sortDir || 'asc'"
-  [page]="query.page || 1"
-  [totalPages]="totalPages"
   (searchChange)="onSearchChange($event)"
   (sortByChange)="onSortByChange($event)"
   (sortDirChange)="onSortDirChange($event)"
-  (pageChange)="onPageChange($event)"
 ></app-dashboard-util>
 
 <div class="bg-white flex flex-col px-3 rounded-xl">
@@ -43,6 +40,31 @@
       </div>
     </div>
   }
+
+  <div class="flex items-center justify-between px-3 py-3 border-t">
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-gray-600">Items per page</span>
+      <select
+        class="border rounded px-2 py-1 bg-white"
+        [value]="query.pageSize || 6"
+        (change)="onPageSizeChange($any($event.target).value)"
+      >
+        <option [value]="6">6</option>
+        <option [value]="10">10</option>
+        <option [value]="20">20</option>
+        <option [value]="50">50</option>
+      </select>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="bg-white border px-3 py-1 rounded disabled:opacity-50" (click)="onPrevPage()" [disabled]="(query.page || 1) <= 1">
+        Prev
+      </button>
+      <span class="text-sm text-gray-600">Page {{ query.page || 1 }} / {{ totalPages || 1 }}</span>
+      <button class="bg-white border px-3 py-1 rounded disabled:opacity-50" (click)="onNextPage()" [disabled]="(query.page || 1) >= totalPages">
+        Next
+      </button>
+    </div>
+  </div>
 
   <app-user-modal
     [user]="selectedUser"

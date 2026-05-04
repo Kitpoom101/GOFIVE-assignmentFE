@@ -18,14 +18,11 @@ export class DashboardUtil {
   @Input() searchTerm = '';
   @Input() sortBy: 'name' | 'username' | 'email' | 'createdDate' = 'name';
   @Input() sortDir: 'asc' | 'desc' = 'asc';
-  @Input() page = 1;
-  @Input() totalPages = 1;
 
   @Output() addUser = new EventEmitter<void>();
   @Output() searchChange = new EventEmitter<string>();
   @Output() sortByChange = new EventEmitter<'name' | 'username' | 'email' | 'createdDate'>();
   @Output() sortDirChange = new EventEmitter<'asc' | 'desc'>();
-  @Output() pageChange = new EventEmitter<number>();
 
   onAdd() {
     this.addUser.emit();
@@ -44,17 +41,5 @@ export class DashboardUtil {
   onSortDir(ev: Event) {
     this.sortDir = (ev.target as HTMLSelectElement).value as 'asc' | 'desc';
     this.sortDirChange.emit(this.sortDir);
-  }
-
-  onPrevPage() {
-    if (this.page > 1) {
-      this.pageChange.emit(this.page - 1);
-    }
-  }
-
-  onNextPage() {
-    if (this.page < this.totalPages) {
-      this.pageChange.emit(this.page + 1);
-    }
   }
 }
