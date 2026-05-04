@@ -6,6 +6,11 @@
     </header>
 
     <form #userForm="ngForm" (ngSubmit)="onSave()" class="um-body">
+      <label for="userId">
+        User ID
+        <input id="userId" name="userId" type="text" [(ngModel)]="userCopy.userId" required />
+      </label>
+
       <label for="firstName">
         First name
         <input id="firstName" name="firstName" type="text" [(ngModel)]="userCopy.firstName" required />
@@ -26,8 +31,64 @@
         <input id="username" name="username" type="text" [(ngModel)]="userCopy.username" required />
       </label>
 
+      <label for="phone">
+        Phone
+        <input id="phone" name="phone" type="text" [(ngModel)]="userCopy.phone" />
+      </label>
+
+      <label for="password">
+        Password
+        <input id="password" name="password" type="password" [(ngModel)]="userCopy.password" required />
+      </label>
+
+      <label for="confirmPassword">
+        Confirm password
+        <input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmPassword"
+          required
+        />
+      </label>
+
+      @if (!passwordsMatch) {
+        <small class="text-red-600">Password and confirm password do not match.</small>
+      }
+
+      <label for="role">
+        Role
+        <select
+          id="role"
+          name="role"
+          [ngModel]="userCopy.role?.roleName"
+          (ngModelChange)="onRoleChange($event)"
+          required
+        >
+          @for (role of availableRoles; track role) {
+            <option [ngValue]="role">{{ role }}</option>
+          }
+        </select>
+      </label>
+
+      <fieldset>
+        <legend>Permissions</legend>
+        @for (permission of availablePermissions; track permission) {
+          <label [for]="'permission-' + permission">
+            <input
+              [id]="'permission-' + permission"
+              [name]="'permission-' + permission"
+              type="checkbox"
+              [checked]="isPermissionChecked(permission)"
+              (change)="onPermissionToggle(permission, $any($event.target).checked)"
+            />
+            {{ permission }}
+          </label>
+        }
+      </fieldset>
+
       <footer class="um-footer">
-        <button type="submit" class="btn" [disabled]="userForm.invalid">Save</button>
+        <button type="submit" class="btn" [disabled]="userForm.invalid || !passwordsMatch">Save</button>
         <button type="button" class="btn btn-muted" (click)="onClose()">Cancel</button>
       </footer>
     </form>

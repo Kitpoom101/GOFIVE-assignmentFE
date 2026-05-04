@@ -16,6 +16,7 @@ export class Dashboard {
   users: User[] = [];
   allUsers: User[] = [];
   selectedUser?: User;
+  isCreateMode = false;
   tableCols = [
     { name: 'Name', width: '40%' },
     { name: 'Username', width: '30%' },
@@ -40,21 +41,48 @@ export class Dashboard {
   }
 
   openEdit(user?: User) {
-    if (user) this.selectedUser = user;
-    else this.selectedUser = { userId: '', firstName: '', lastName: '', email: '', username: '' };
+    if (user) {
+      this.isCreateMode = false;
+      this.selectedUser = user;
+    }
+    else {
+      this.isCreateMode = true;
+      this.selectedUser = {
+        userId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        username: '',
+        password: '',
+        createdDate: '',
+        role: {
+          roleId: '',
+          roleName: 'employee',
+        },
+        permissions: [{ permissionId: '', permissionName: 'read' }],
+      };
+    }
   }
 
   onModalClose() {
     this.selectedUser = undefined;
+    this.isCreateMode = false;
   }
 
   onSaveUser(user: User) {
-    if (!user.userId) {
+    if (this.isCreateMode) {
       const createPayload = {
+        userId: user.userId,
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        phone: user.phone,
         username: user.username,
+        password: user.password,
+        createdDate: user.createdDate || new Date().toISOString(),
+        role: user.role,
+        permissions: user.permissions ?? [],
       };
       this.userService.createUser(createPayload).subscribe({
         next: () => {

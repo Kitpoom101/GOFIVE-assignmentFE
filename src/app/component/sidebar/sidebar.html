@@ -2,9 +2,13 @@
   <div class="text-2xl font-bold flex p-4">
     YOURLOGO
   </div>
-  @for (data of FunctionData; track $index) {
-    <div class="hover:text-[#4A85F6] cursor-pointer">
-      {{data}}
-    </div>
-  }
+  <div class="gap-4 flex flex-col font-sans font-medium">
+    @for (data of FunctionData; track $index) {
+      <div class="hover:text-[#4A85F6] cursor-pointer flex items-center gap-2 px-3 py-2">
+        <ng-container *ngComponentOutlet="data.icon"></ng-container>
+        {{data.name}}
+      </div>
+    }
+  </div>
+  
 </div>
