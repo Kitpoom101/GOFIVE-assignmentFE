@@ -101,9 +101,7 @@ builder.Services.AddCors(options =>
 app.UseCors("AllowFrontend");
 ```
 ---
-
-│   ├── pages/        
-│   ├── services/     
+  
 ## 📁 Project Structure
 ```
 src/
