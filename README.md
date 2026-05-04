@@ -1,59 +1,148 @@
-# Frontend
+# GOFIVE Frontend (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+This is the frontend for the GOFIVE system built with Angular. It provides the user interface and communicates with an ASP.NET backend API running locally.
 
-## Development server
+The application is built using Angular with TypeScript, HTML, and CSS, following a modular structure with components, pages, services, and environment-based configuration.
 
-To start a local development server, run:
+---
 
-```bash
+## 🚀 Prerequisites
+
+Make sure you have the following installed:
+
+- Node.js (LTS) → https://nodejs.org/
+- Angular CLI
+
+Install Angular CLI:
+```
+npm install -g @angular/cli
+```
+Verify installation:
+```
+node -v
+npm -v
+ng version
+```
+---
+
+## 📦 Setup Instructions
+
+Clone the repository:
+```
+git clone https://github.com/Kitpoom101/GOFIVE-assignmentFE.git
+cd GOFIVE-assignmentFE
+```
+Install dependencies:
+```
+npm install
+```
+Run the frontend:
+```
 ng serve
 ```
+Open in browser:
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+http://localhost:4200
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## 🔗 Backend Setup
 
-```bash
-ng generate component component-name
+This frontend connects to an ASP.NET backend running on:
 ```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
+http://localhost:5214
 ```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
+Start backend:
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+cd GOFIVE-assignmentBE
+dotnet run
 ```
+The backend must be running before the frontend is used.
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## ⚙️ API Configuration
 
-```bash
-ng e2e
+API base URL is managed using Angular environment files:
+
+File:
+src/environments/env.ts
+
+Example:
 ```
+export const environment = {
+  production: false,
+  apiUrl: 'http://localhost:5214/api'
+};
+```
+Use it in services:
+```
+import { environment } from '../../environments/env';
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+this.http.get(`${environment.apiUrl}/users`);
+```
+---
 
-## Additional Resources
+## 🌐 Backend CORS Setup
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+If API requests fail, enable CORS in ASP.NET (Program.cs):
+```
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:4200")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+app.UseCors("AllowFrontend");
+```
+---
+
+## 📁 Project Structure
+
+src/
+├── app/
+│   ├── components/   → UI elements (Header, Sidebar, Icons, Modals)
+│   ├── pages/        → Full pages (Dashboard, Document, NoPage)
+│   ├── services/     → API communication layer
+│   ├── app.ts
+│   ├── app.routes.ts
+│   └── app.config.ts
+│
+├── environments/
+│   ├── env.ts
+│   └── env.prod.ts
+│
+├── index.html
+├── main.ts
+├── main.server.ts
+├── server.ts
+└── styles.css
+
+---
+
+## ⚠️ Common Issues
+
+### Port already in use
+ng serve --port 4201
+
+### Broken dependencies
+```rm -rf node_modules package-lock.json
+npm install```
+
+### CORS errors
+Ensure backend allows:
+http://localhost:4200
+
+---
+
+## 🧠 Notes
+
+- Backend must be running before frontend
+- All API calls must use environment.apiUrl
+- Angular supports live reload during development
+- SSR files exist but are optional
