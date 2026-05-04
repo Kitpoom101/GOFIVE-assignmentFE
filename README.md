@@ -102,13 +102,27 @@ app.UseCors("AllowFrontend");
 ```
 ---
 
+│   ├── pages/        
+│   ├── services/     
 ## 📁 Project Structure
 
 src/
 ├── app/
-│   ├── components/   → UI elements (Header, Sidebar, Icons, Modals)
-│   ├── pages/        → Full pages (Dashboard, Document, NoPage)
-│   ├── services/     → API communication layer
+│   ├── components/     → UI elements (Header, Sidebar, Icons, Modals)   
+│   │   ├── Header/
+│   │   ├── sidebar/
+│   │   ├── DashboardUtil/
+│   │   ├── UserModal/
+│   │   └── icon/
+│   │
+│   ├── pages/          → Full pages (Dashboard, Document, NoPage)   
+│   │   ├── Dashboard/
+│   │   ├── Document/
+│   │   └── NoPage/
+│   │
+│   ├── services/       → API communication layer   
+│   │   └── user.ts
+│   │
 │   ├── app.ts
 │   ├── app.routes.ts
 │   └── app.config.ts
@@ -122,7 +136,6 @@ src/
 ├── main.server.ts
 ├── server.ts
 └── styles.css
-
 ---
 
 ## ⚠️ Common Issues
